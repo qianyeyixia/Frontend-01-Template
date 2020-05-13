@@ -12,11 +12,11 @@ JS Context => Realm
 # 浏览器工作原理 
 
 ## 状态机
+  通过 node 模拟 浏览器工作原理中的 HTTP请求 了解认识状态机 
 
   state 状态
   Event 事件
   Action 动作
   Transition 迁移
 
- 通过 node 模拟 浏览器工作原理中的 HTTP请求 了解认识状态机 
 
