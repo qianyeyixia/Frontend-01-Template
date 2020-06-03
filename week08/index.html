@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试匹配 match</title>
+  <script src="./math.js"></script>
+</head>
+<body>
+  <div id="test">
+    <div class="a">
+      <div class="b"><span></span></div>
+    </div>
+  </div>
+</body>
+</html>
+
+<script>
+     console.assert(match('#test .a .b', document.getElementsByClassName('b')[0]),'应该匹配')
+    console.assert(match('#test .a .b span', document.getElementsByClassName('b')[0]),'应该不匹配')
+
+</script>
