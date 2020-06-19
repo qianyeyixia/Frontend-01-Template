@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      div {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        margin: 10px;
+        background-color: gray;
+      }
+      .light {
+        background-color: gray;
+      }
+      .light.red {
+        background-color: red;
+      }
+      .light.green {
+        background-color: green;
+      }
+      .light.yellow {
+        background-color: yellow;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="red"></div>
+    <div class="green"></div>
+    <div class="yellow"></div>
+
+    <button id="next">next</button>
+  </body>
+</html>
+<script>
+  function green() {
+    let lights = document.getElementsByTagName("div");
+    for (let i = 0; i < 3; i++) {
+      lights[i].classList.remove("light");
+      document.getElementsByClassName("green")[0].classList.add("light");
+    }
+  }
+  function red() {
+    let lights = document.getElementsByTagName("div");
+    for (let i = 0; i < 3; i++) {
+      lights[i].classList.remove("light");
+      document.getElementsByClassName("red")[0].classList.add("light");
+    }
+  }
+  function yellow() {
+    let lights = document.getElementsByTagName("div");
+    for (let i = 0; i < 3; i++) {
+      lights[i].classList.remove("light");
+      document.getElementsByClassName("yellow")[0].classList.add("light");
+    }
+  }
+  // function go() {
+  //   green()
+
+  //   setTimeout(yellow,10000)
+  //   setTimeout(red,12000)
+  //   setTimeout(go,17000)
+  // }
+  // go()
+  function sleep(t) {
+    return new Promise((reslove, reject) => {
+      setTimeout(reslove, t);
+    });
+  }
+  
+  // function happen(eventName) {
+  //   return new Promise((reslove,reject) => {
+  //     document.addEventListener(eventName ,reslove, once)
+  //   })
+  // }
+
+
+  // async function  PermiseGo() {
+  //   while(true) {
+  //     green();
+  //     // await sleep(10000)
+  //     await happen(document.getElementById('next'),'click')
+  //     yellow()
+  //     // await sleep(20000)
+  //     await happen(document.getElementById('next'),'click')
+
+  //     red()
+  //     await happen(document.getElementById('next'),'click')
+  //     // await sleep(5000)
+  //     PermiseGo()
+  //   }
+    // sleep(1000)
+    //   .then(() => {
+    //     yellow();
+    //     return sleep(200);
+    //   })
+    //   .then(() => {
+    //     red();
+    //     return sleep(500);
+    //   })
+    //   .then(PermiseGo());
+  // }
+
+
+  function* go() {
+    while(true) {
+      green()
+      yield sleep(1000);
+      yellow()
+      yield sleep(2000);
+      red()
+      yield sleep(500);
+    }
+  
+  }
+
+  function co(generator) {
+    return function () {
+      let iterator = generator()
+      
+      let {value, done} = iterator.next()
+      if(done) {
+        return
+      }
+      if(value instanceof Promise) {
+        value.then(() => {
+          co(iterator)
+        })
+      }
+    }
+  }
+  // function co (iterator) {
+  //   let {p, done} = iterator.next()
+  //   if(done) {
+  //     return
+  //   }
+  //   p.then( () => co(iterator))
+  // }
+  // co(go())
+</script>
