@@ -1,13 +1,30 @@
 
-function create(Cls,attributes,...children) {
+function createElement(Cls,attributes,...children) {
   console.log(arguments)
-  let o = new Cls;
-  for (const name in attributes) {
-    o.setAttribute(name,attributes[name])
+  let o;
+  
+  if(typeof Cls === 'string') {
+    o = new Wrapper(Cls);
+  } else {
+    o = new Cls({
+      timer:P
+    })
   }
-  console.log(children);
+  
+  
+  
+  o = new Cls({
+    timer:{}
+  })
+
+  for (let name in attributes) {
+    o.setAttribute(name, attributes[name])
+  }
   for (let child of children) {
-    o.appendChild(child)
+    console.log('child',child);
+    if(typeof child === 'string')
+      child = new Text(child)
+    o.children.push(child)
   }
   return o
 }
@@ -15,8 +32,18 @@ function create(Cls,attributes,...children) {
 class Text {
   constructor(text) {
     this.children = []
-
+    this.root = document.createTextNode(text);
   } 
+  setAttribute(name,value) {
+    this.root.setAttribute(name,value)
+  }
+
+  mountTo(parent) {
+    parent.appendChild(this.root)
+    for(let child of this.children) {
+      child.mountTo(this.root)
+    }
+  }
 }
 
 
@@ -30,12 +57,22 @@ class MyComponent {
     this.root.setAttribute(name,value)
   }
   appendChild(child) {
-    console.log('Parent appendChild',child);
     this.children.push(child)
   }
   render() {
-    this.slot = <div></div> 
-    
+    return <article>
+      <header>我是头部</header>
+      {this.slot}
+      <footer>我是底部</footer>
+    </article>
+  }
+
+  mountTo(parent) {
+    this.slot = <div></div>
+    for (let child of this.children) {
+      this.slot.appendChild(child)
+    }
+    this.render().mountTo(parent)
   }
 }
 
@@ -96,12 +133,10 @@ class Child {
   }
 }
 
-let componet = <Parent id="a" class="b">
-  <Child id="a" class="b">
-  </Child>
-  <Child></Child>
-  <Child></Child>
-</Parent>;
 
-componet.moveTo(document.body)
-console.log(componet);
+let component = <MyComponent>
+  <div>text text text</div>
+</MyComponent>
+
+component.moveTo(document.body)
+console.log(component);
